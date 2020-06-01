@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo
+  labels:
+    app: front
+    env: dev
+spec:
+  containers:
+  - name: cont2
+    image: nginx
