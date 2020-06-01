@@ -97,7 +97,11 @@ LEVANTAR DASHBOARD: kubectl apply -f https://raw.githubusercontent.com/kubernete
 					kubectl proxy
 OBTENER TOKEN DESPUES DE CREAR SERVICE ACCOUNT/ROLE: kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | sls admin-user | ForEach-Object { $_ -Split '\s+' } | Select -First 1)										  
 
-
-
+========DOCKER==============================================
+docker rm -fv c7afec7e0b67d9434559640b56bf17bf0aff92e8928084cd6b44f661056c77fe eliminar imagen
+docker run --rm -dti -v /$PWD/:/go --net host --name golang golang bash
+docker run --rm -dti -v "%cd%":/go --net host --name golang golang bash crear imagen y compartir carpeta a go dentro
+docker exec -ti 0944d4859381854d20439bf22c4d5f51917d38de956a2ed1af3ca84c8fc6cada bash entrar dentro de la imagen
+go run main.go
 
  					
