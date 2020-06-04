@@ -33,42 +33,6 @@ deployment.apps/test-nginx created
 
 
 kubectl run --generator=run-pod/v1 test --image=nginx --port=80 --env="DOMAIN=cluster"
-
-  # Start a single instance of nginx.
-  kubectl run nginx --image=nginx
-
-  # Start a single instance of hazelcast and let the container expose port 5701 .
-  kubectl run hazelcast --image=hazelcast --port=5701
-
-  # Start a single instance of hazelcast and set environment variables "DNS_DOMAIN=cluster" and "POD_NAMESPACE=default" in the container.
-  kubectl run hazelcast --image=hazelcast --env="DNS_DOMAIN=cluster" --env="POD_NAMESPACE=default"
-
-  # Start a single instance of hazelcast and set labels "app=hazelcast" and "env=prod" in the container.
-  kubectl run hazelcast --image=hazelcast --labels="app=hazelcast,env=prod"
-
-  # Start a replicated instance of nginx.
-  kubectl run nginx --image=nginx --replicas=5
-
-  # Dry run. Print the corresponding API objects without creating them.
-  kubectl run nginx --image=nginx --dry-run
-
-  # Start a single instance of nginx, but overload the spec of the deployment with a partial set of values parsed from JSON.
-  kubectl run nginx --image=nginx --overrides='{ "apiVersion": "v1", "spec": { ... } }'
-
-  # Start a pod of busybox and keep it in the foreground, don't restart it if it exits.
-  kubectl run -i -t busybox --image=busybox --restart=Never
-
-  # Start the nginx container using the default command, but use custom arguments (arg1 .. argN) for that command.
-  kubectl run nginx --image=nginx -- <arg1> <arg2> ... <argN>
-
-  # Start the nginx container using a different command and custom arguments.
-  kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>
-
-  # Start the perl container to compute π to 2000 places and print it out.
-  kubectl run pi --image=perl --restart=OnFailure -- perl -Mbignum=bpi -wle 'print bpi(2000)'
-
-  # Start the cron job to compute π to 2000 places and print it out every 5 minutes.
-  kubectl run pi --schedule="0/5 * * * ?" --image=perl --restart=OnFailure -- perl -Mbignum=bpi -wle 'print bpi(2000)'
   
   CREAR POD TEMPORAL INTERACTIVO: kubectl run --rm -ti --generator=run-pod/v1 podtest3 --image=nginx:alpine -- sh
   
@@ -104,4 +68,39 @@ docker run --rm -dti -v "%cd%":/go --net host --name golang golang bash crear im
 docker exec -ti 0944d4859381854d20439bf22c4d5f51917d38de956a2ed1af3ca84c8fc6cada bash entrar dentro de la imagen
 go run main.go
 
+docker build -t k8s-hands-on -f Dockerfile .
+docker run -d(daemon) -p(puerto) 9091(maquina local):9090(contenedor --name k8s-hands-on(nombre) k8s-hands-on(imagen) 
  					
+====PROBLEMA DE IMAGEN LOCAL =================
+
+The command minikube docker-env returns a set of Bash environment variable exports to configure your local environment to re-use the Docker daemon inside the Minikube instance.
+
+Passing this output through eval causes bash to evaluate these exports and put them into effect.
+
+You can review the specific commands which will be executed in your shell by omitting the evaluation step and running minikube docker-env directly. However, this will not perform the configuration – the output needs to be evaluated for that.
+
+This is a workflow optimization intended to improve your experience with building and running Docker images which you can run inside the minikube environment. It is not mandatory that you re-use minikube's Docker daemon to use minikube effectively, but doing so will significantly improve the speed of your code-build-test cycle.
+
+In a normal workflow, you would have a separate Docker registry on your host machine to that in minikube, which necessitates the following process to build and run a Docker image inside minikube:
+
+Build the Docker image on the host machine.
+Re-tag the built image in your local machine's image registry with a remote registry or that of the minikube instance.
+Push the image to the remote registry or minikube.
+(If using a remote registry) Configure minikube with the appropriate permissions to pull images from the registry.
+Set up your deployment in minikube to use the image.
+By re-using the Docker registry inside Minikube, this becomes:
+
+Build the Docker image using Minikube's Docker instance. This pushes the image to Minikube's Docker registry.
+Set up your deployment in minikube to use the image.
+
+PS C:\k8s\pods\go-backend-service> minikube docker-env                                                                  $Env:DOCKER_TLS_VERIFY = "1"
+PS C:\k8s\pods\go-backend-service> minikube -p minikube docker-env | Invoke-Expression                                  PS C:\k8s\pods\go-backend-service> cd .\src\                                                                            PS C:\k8s\pods\go-backend-service\src> docker build -t k8s-hands-on -f Dockerfile .                                     Sending build context to Docker daemon  3.584kB
+PS C:\k8s\pods\go-backend-service\src> docker build -t k8s-hands-on -f Dockerfile . 
+Successfully tagged k8s-hands-on:latest
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+PS C:\k8s\pods\go-backend-service\src> kubectl apply -f .\backend.yml                                                   deployment.apps/backend-dep created
+service/backend-svc created
+PS C:\k8s\pods\go-backend-service\src> kubectl get pods                                                                 NAME                           READY   STATUS    RESTARTS   AGE
+backend-dep-66ccdbbd64-k54zf   1/1     Running   0          12s
+backend-dep-66ccdbbd64-lzvrh   1/1     Running   0          12s
+backend-dep-66ccdbbd64-zvwqc   1/1     Running   0          12s					
