@@ -68,7 +68,8 @@ docker run --rm -dti -v "%cd%":/go --net host --name golang golang bash crear im
 docker exec -ti 0944d4859381854d20439bf22c4d5f51917d38de956a2ed1af3ca84c8fc6cada bash entrar dentro de la imagen
 go run main.go
 
-docker build -t k8s-hands-on -f Dockerfile .
+docker build -t k8s-hands-on -f Dockerfile 
+docker build -t k8s-hands-on:v2 -f Dockerfile .
 docker run -d(daemon) -p(puerto) 9091(maquina local):9090(contenedor --name k8s-hands-on(nombre) k8s-hands-on(imagen) 
  					
 ====PROBLEMA DE IMAGEN LOCAL =================
@@ -104,3 +105,9 @@ PS C:\k8s\pods\go-backend-service\src> kubectl get pods                         
 backend-dep-66ccdbbd64-k54zf   1/1     Running   0          12s
 backend-dep-66ccdbbd64-lzvrh   1/1     Running   0          12s
 backend-dep-66ccdbbd64-zvwqc   1/1     Running   0          12s					
+
+IMAGEN FRONT: docker build -t front-k8s-hands-on:v1 -f .\Dockerfile .  
+
+VER CONTEXTO ACTUAL: kubectl config current-context 
+CREAR CONTEXTO: kubectl config set-context ci-context --namespace=ci --cluster=minikube --user=minikube  
+USAR CONTEXTO: 
