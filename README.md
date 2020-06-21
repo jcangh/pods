@@ -3,6 +3,7 @@ Kubernetes course
 
 
 Resources for kuernetes course on Windows with docker
+KUBELET: Servicio que corre en cada pod
 
 
 COMANDS
@@ -16,8 +17,6 @@ minikube delete & REM deleted the VM
 
 minikube start --driver=docker
 
-
-video 2 	18:32
 
 POD KUBERNETES: Compartir namespaces entre contenedores
 				Wrapper uno o mas contenedores que comparten namespaces entre si
@@ -110,4 +109,12 @@ IMAGEN FRONT: docker build -t front-k8s-hands-on:v1 -f .\Dockerfile .
 
 VER CONTEXTO ACTUAL: kubectl config current-context 
 CREAR CONTEXTO: kubectl config set-context ci-context --namespace=ci --cluster=minikube --user=minikube  
-USAR CONTEXTO: 
+USAR CONTEXTO: kubectl config use-context arn:aws:eks:us-west-2:676699563051:cluster/upic-adsales-eks
+DESCRIBIR NAMESPACE: kubectl describe ns dev
+LIMIT RANGE Y RESOURCE QUOTA: kubectl get limitranges
+							  kubectl get resourcequota
+PROBE:
+	LIVENESS:	se ejecuta en el contenedor cada n intervalo de tiempo
+				puede ser comando, http o tcp. por ejemplo puede evaluar un status code-build-test
+	READINESS:	nos ayuda a garantizar que el servicio dentro del pod est
+	START UP:	pausa liveness y readiness si está definido
