@@ -33,7 +33,9 @@ deployment.apps/test-nginx created
 
 kubectl run --generator=run-pod/v1 test --image=nginx --port=80 --env="DOMAIN=cluster"
   
+  
   CREAR POD TEMPORAL INTERACTIVO: kubectl run --rm -ti --generator=run-pod/v1 podtest3 --image=nginx:alpine -- sh
+  POD INTERACTIVO DE UN POD EXISTENTE: kubectl exec -ti deployment-test-7fb785464c-hbdlv -- sh
   
 
 CREAR POD DESDE YAML: kubectl apply -f test.yml  
@@ -118,3 +120,6 @@ PROBE:
 				puede ser comando, http o tcp. por ejemplo puede evaluar un status code-build-test
 	READINESS:	nos ayuda a garantizar que el servicio dentro del pod est
 	START UP:	pausa liveness y readiness si está definido
+
+CREAR CONFIG MAP:  kubectl create configmap nginx-config --from-file=examples (from file toma todos los archivos de la carpeta)
+GET CONFIG MAPS: kubectl get cm
